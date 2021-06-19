@@ -48,7 +48,7 @@ done
 
 # data without lang tags + tags /notags
 
-## finetune: 54.25 54.45
+## finetune: no pretrained: wtags: 54.25 wotags: 54.45 12000：54.57
 + train from scratch: Generate test with beam=5: BLEU4 = 46.95, 79.5/59.8/45.8/36.3 (BP=0.886, ratio=0.892, syslen=45701, reflen=51247)
 
 NIST score = 11.6727  BLEU score = 0.6580 for system "tst"

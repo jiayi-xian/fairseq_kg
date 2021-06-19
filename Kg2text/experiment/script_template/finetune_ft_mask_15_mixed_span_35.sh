@@ -13,15 +13,16 @@ TOKENIZER=${EFS}/tokenizer
 pretrain_setting=ft_mbart50/mask_15_mixed_span_35
 #pretrain_setting=fs_mbart50/mask_15_mixed_span_35
 #pretrain_setting=fs_mbart50/mask_15_word_word
-checkpoint_file=checkpoint_1_65000.pt
+updates=2
+checkpoint_file=checkpoint$updates.pt
 dataset=webnlg
 SRC=kg
 TGT=text
 
 DATADIR=${EFS}/data-bin/dataset_kg2text/$dataset/en_XX
-PRETRAIN=${EFS}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/$checkpoint_file
+PRETRAIN=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/$checkpoint_file
 tensorboard_dir=${BASE}/logs/tensorboard/kg2text_$dataset
-checkpoint_dir=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset
+checkpoint_dir=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset/epo$updates/
 
 source ~/anaconda3/bin/activate pytorch_latest_p37
 
@@ -32,15 +33,15 @@ CUDA_VISIBLE_DEVICES=${CUDA} python ${FAIRSEQ}/train.py ${DATADIR} \
     --task translation --source-lang ${SRC} --target-lang ${TGT} \
     --criterion label_smoothed_cross_entropy --label-smoothing 0.2  \
     --optimizer adam --adam-eps 1e-06 --adam-betas '(0.9, 0.98)' --weight-decay 0.0 \
-    --lr-scheduler inverse_sqrt --lr "1e-05" --stop-min-lr '-1' \
+    --lr-scheduler inverse_sqrt --lr "3e-05" --stop-min-lr '-1' \
     --warmup-updates 200 --max-update 20000 \
-    --max-tokens 3720 --update-freq 1 \
-	--fp16 --seed 222 \
+    --max-tokens 1024 --update-freq 2 \
+	--seed 222 \
     --validate-interval 5 \
     --save-interval 10 --save-dir ${checkpoint_dir} \
     --log-format simple --log-interval 10 --tensorboard-logdir $tensorboard_dir \
     --scoring bleu \
-    --dataset-impl mmap --ddp-backend no_c10d \
+    --dataset-impl mmap --ddp-backend legacy_ddp \
     --num-workers 8 --required-batch-size-multiple 8 \
     
 # --restore-file $PRETRAIN \
