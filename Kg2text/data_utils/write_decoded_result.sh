@@ -4,11 +4,11 @@ log_base=/home/ubuntu/efs-storage/decoded_results
 pretrain_setting=fs_mbart50/mask_15_mixed_span_35
 
 dataset=webnlg
-file_name=chp_best.log
+file_name=ftbest_fpepo1.log
 
 load_file_dir=$log_base/$pretrain_setting/ft_$dataset/
-nohup_output=chp_best.log
-decoded_output=chp_best
+nohup_output=ftbest_fpepo1.log
+decoded_output=ftbest_fpepo1
 tags=[en_XX][TEXT]
 
 

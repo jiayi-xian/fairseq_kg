@@ -13,8 +13,8 @@ TOKENIZER=${EFS}/tokenizer
 
 
 #pretrain_setting=ft_mbart50/mask_15_mixed_span_35
-#pretrain_setting=fs_mbart50/mask_15_mixed_span_35
-pretrain_setting=fp_mbart50/mask_15_mixed_span_35
+pretrain_setting=fs_mbart50/mask_15_mixed_span_35
+#pretrain_setting=fp_mbart50/mask_15_mixed_span_35
 #pretrain_setting=fs_mbart50/mask_15_word_word
 DATADIR=${BASE}/dataset_denoising/kgtext_wikidata
 PRETRAIN=${EFS}/models/mbart50.pretrained/model_wtags0/model.pt
@@ -39,12 +39,12 @@ CUDA_VISIBLE_DEVICES=${CUDA} python ${FAIRSEQ}/train.py ${DATADIR} \
     --sample-break-mode eos --whole_word_mask_mode mixed  \
     --mask 0.15 --mask-random 0.0 --insert 0.0  \
     --permute 0.0 --rotate 0.0 --poisson-lambda 3.5  \
-    --permute-sentences 0.0 --mask-length span-poisson --replace-length "-1"  \
+    --permute-sentences 0.0 --mask-length span-poisson --replace-length "1"  \
     --shorten-method none --bpe sentencepiece --sentencepiece-model /home/ubuntu/efs-storage/tokenizer/mbart50/bpe/sentence.bpe.model  \
     --train-subset train --valid-subset valid \
     --num-workers 8 --required-batch-size-multiple 8 \
     --tensorboard-logdir $tensorboard_dir \
-    --finetune-from-model ${PRETRAIN} \
+ #--finetune-from-model ${PRETRAIN} \
 # --restore-file $restore_file \
 # --no-epoch-checkpoints
 #  --reset-optimizer \
