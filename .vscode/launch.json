@@ -476,7 +476,7 @@
       "program": "/home/ubuntu/fairseq/fairseq_cli/train.py",
       "console": "integratedTerminal",
       "args": [
-        "/home/ubuntu/efs-storage/data-bin/dataset_denoising/kgtext_wikidata",
+        "/home/ubuntu/efs-storage/data-bin/dataset_denoising/webnlg",
         "--encoder-normalize-before",
         "--decoder-normalize-before",
         "--arch",
@@ -576,7 +576,8 @@
         "--train-subset",
         "train",
         "--valid-subset",
-        "valid"
+        "valid",
+        "--finetune-from-model", "/home/ubuntu/efs-storage/models/mbart50.pretrained/model_wtags0/model.pt"
       ]
     },
     {
