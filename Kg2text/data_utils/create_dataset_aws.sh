@@ -22,7 +22,7 @@ source ~/anaconda3/bin/activate pytorch_latest_p37
 python ${KG2TEXT}/code/create_dataset_multiprocess.py \
     --option kg2kg --tokenized true --tagged true \
     --add_kg_tag true --add_text_tag true --add_lang_tag true --lang en_XX \
-    --dataset kgtext_wikidata \
+    --dataset wikibionlg \
     --config_file triples_dataset.yaml --setting_file token_setting.yaml  \
     --load_data_dir $load_data_dir --save_data_dir $save_data_dir \
     --efs ${EFS} \

@@ -406,11 +406,10 @@ class Kg2KgDataset(Dataset):
                             triples += triple # triple: list of triples, list of str
                         triples = triples.strip()
                         triples = self.tag_post_process(triples, setting, "kg")
-                        f1.write(triples + "\n") # TODO comment
-                    
-
-
-                
+                        triples_cut = triples.split(" ")
+                        triples_out = triples_cut if len(triples_cut)<= self.src_max else triples_cut[:self.src_max]
+                        triples_out = " ".join(triples_out)
+                        f1.write(triples_out + "\n") # TODO comment
 
                     # for src_text
                 elif self.seperate == True:

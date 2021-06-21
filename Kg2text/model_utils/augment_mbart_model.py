@@ -51,17 +51,28 @@ def augment_mbart_state_embeddings(state, tgt_dict):
         raise ValueError("target dict is smaller than current dict")
         
     embed_dim = state_dict["encoder.embed_tokens.weight"].size(1)
+    print("embed_dim:", embed_dim)
     new_embeds_to_add = torch.zeros(
         num_embeddings_toadd, embed_dim, dtype=state_dict["decoder.embed_tokens.weight"].dtype)
     nn.init.normal_(new_embeds_to_add, mean=0, std=embed_dim ** -0.5)
-    
+    print("new embed to add:", num_embeddings_toadd)
     state_dict["encoder.embed_tokens.weight"] = enlarge_weights(
         state_dict["encoder.embed_tokens.weight"], loaded_dict_size, new_embeds_to_add)
     state_dict["decoder.embed_tokens.weight"] = enlarge_weights(
         state_dict["decoder.embed_tokens.weight"], loaded_dict_size, new_embeds_to_add)
-#     state_dict["decoder.output_projection.weight"] = enlarge_weights(
-#         state_dict["decoder.output_projection.weight"], loaded_dict_size, new_embeds_to_add)  
+    
+    if "decoder.output_projection.weight" in state_dict.keys():
+        state_dict["decoder.output_projection.weight"] = enlarge_weights( 
+            state_dict["decoder.output_projection.weight"], loaded_dict_size, new_embeds_to_add)
+    
     return state
+
+def print_model(state, file_name):
+    with open(file_name, "w") as f:
+        for key, vec in state["model"].items():
+            print(key, vec.shape)
+            f.write(key + " : " + str(vec.shape) + "\n")
+    f.close()
 
 if __name__ == "__main__":
     # usage example:
@@ -70,15 +81,21 @@ if __name__ == "__main__":
     parser.add_argument("folder", type=str)
     parser.add_argument('--save-to', type=str)
     parser.add_argument('--tgt-dict', type=str)
+    parser.add_argument('--file_name', default="", type=str)
 
     args = parser.parse_args()
 
     tgt_dict = Dictionary.load(args.tgt_dict)
     state = load_state(args.folder)
     new_state = augment_mbart_state_embeddings(state, tgt_dict)
+    if args.file_name:
+        print_model(new_state, args.file_name)
 
     new_folder = args.save_to
     os.makedirs(new_folder, exist_ok=True)
     new_model_path = f"{new_folder}/model.pt"
     torch.save(new_state, f=open(new_model_path, 'wb'))
     print('new model save to: ', new_model_path)
+    
+        
+

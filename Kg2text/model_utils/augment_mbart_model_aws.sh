@@ -11,6 +11,6 @@ TOKENIZER=${EFS}/tokenizer
 DATADIR=${EFS}/data-bin/dataset_denoising/kgtext_wikidata
 
 python $KG2TEXT/model_utils/augment_mbart_model.py \
-   $EFS/models/mbart50.ft.nn \
+   $EFS/models/mbart50.pretrained \
    --tgt-dict $DATADIR/dict.txt \
-   --save-to $EFS/models/mbart50.ft.nn/model_wtags0
+   --save-to $EFS/models/mbart50.pretrained/model_wtags0

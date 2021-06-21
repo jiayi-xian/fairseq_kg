@@ -2,6 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: aws augment_mbart_model",
+      "type": "python",
+      "request": "launch",
+      "program": "./Kg2text/model_utils/augment_mbart_model.py",
+      "console": "integratedTerminal",
+      "args":[
+        "/home/ubuntu/efs-storage/models/mbart50.pretrained", 
+        "--save-to", "/home/ubuntu/efs-storage/models/mbart50.pretrained/model_wtags0/test",
+        "--tgt-dict", "/home/ubuntu/efs-storage/data-bin/dataset_denoising/kgtext_wikidata/dict.txt"
+      ]
+    },
+    {
       "type": "bashdb",
       "request": "launch",
       "name": "Bash-Debug (select script from list of sh files)",
@@ -9,7 +21,6 @@
       "program": "${command:SelectScriptName}",
       "args": []
     },
-
     {
       "name": "Python: clouddesk dataset_info.py",
       "type": "python",
@@ -17,14 +28,16 @@
       "program": "./Kg2text/data_utils/dataset_info.py",
       "console": "integratedTerminal",
       "args": [
-        "--file_name", 
+        "--file_name",
         "trial00",
-        "--data_dir", 
+        "--data_dir",
         "/home/xianjiay/efs-storage/data-bin/dataset",
-        "--dataset", 
+        "--dataset",
         "kgtext_wikidata",
-        "--option", "info",
-        "--unit", "10000"
+        "--option",
+        "info",
+        "--unit",
+        "10000"
       ],
       "env": {
         "PYTHONPATH": "${workspaceRoot}"
