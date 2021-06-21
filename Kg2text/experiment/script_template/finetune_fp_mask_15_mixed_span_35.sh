@@ -11,39 +11,45 @@ TOKENIZER=${EFS}/tokenizer
 #langs_25=ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN
 
 
-pretrain_setting=fs_mbart50/mask_15_mixed_span_35
+pretrain_setting=fp_mbart50/mask_15_mixed_span_35
 #pretrain_setting=fs_mbart50/mask_15_word_word
-checkpoint_file=checkpoint_last.pt
+epo=3_0
+checkpoint_file=backup/checkpoint2.pt
+restore_file=checkpoint1.pt
 
-dataset=webnlg
+dataset=e2enlg
 SRC=kg
 TGT=text
 
 DATADIR=${EFS}/data-bin/dataset_kg2text/$dataset/en_XX
-PRETRAIN=${EFS}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/$checkpoint_file
+PRETRAIN=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/$checkpoint_file
 tensorboard_dir=${BASE}/logs/tensorboard/kg2text_$dataset
-checkpoint_dir=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset
+checkpoint_dir=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset/epo$epo
+restore_file=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset/$checkpoint_file
 
 source ~/anaconda3/bin/activate pytorch_latest_p37
 
 #python ${FAIRSEQ}/train.py ${DATADIR} \
 CUDA_VISIBLE_DEVICES=${CUDA} python ${FAIRSEQ}/train.py ${DATADIR} \
-    --encoder-normalize-before --decoder-normalize-before --arch mbart_large --finetune-from-model ${PRETRAIN} \
+    --encoder-normalize-before --decoder-normalize-before --arch mbart_large \
     --dropout 0.3 --attention-dropout 0.1 --layernorm-embedding \
     --task translation --source-lang ${SRC} --target-lang ${TGT} \
     --criterion label_smoothed_cross_entropy --label-smoothing 0.2  \
     --optimizer adam --adam-eps 1e-06 --adam-betas '(0.9, 0.98)' --weight-decay 0.0 \
-    --lr-scheduler inverse_sqrt --lr "1e-05" --stop-min-lr '-1' \
-    --warmup-updates 200 --max-update 20000 \
+    --lr-scheduler inverse_sqrt --lr "3e-05" --stop-min-lr '-1' \
+    --warmup-updates 1200 --max-update 20000 \
     --max-tokens 2560 --update-freq 1 \
-	--fp16 --seed 222 \
+	--seed 222 \
     --validate-interval 5 \
-    --save-interval 10 --save-dir ${checkpoint_dir} \
+    --save-interval 5 --save-dir ${checkpoint_dir} \
     --log-format simple --log-interval 10 --tensorboard-logdir $tensorboard_dir \
-    --scoring bleu \
     --dataset-impl mmap --ddp-backend no_c10d \
     --num-workers 8 --required-batch-size-multiple 8 \
-    
+    --finetune-from-model ${PRETRAIN}
+#    --restore-file $restore_file
+#    --finetune-from-model ${PRETRAIN}
+#   --restore-file $restore_file
+#    --finetune-from-model ${PRETRAIN} \
 # --restore-file $PRETRAIN \
 # --langs ${langs}
 # --reset-optimizer --reset-meters --reset-dataloader --reset-lr-scheduler \
