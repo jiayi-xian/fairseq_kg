@@ -6,10 +6,11 @@ FAIRSEQ=${WORKSPACE}/fairseq/fairseq_cli
 KG2TEXT=${WORKSPACE}/fairseq/Kg2text
 TOKENIZER=${EFS}/tokenizer
 
+pretrain_setting=fs_mbart50/mask_15_word_N_span_35
 #pretrain_setting=ft_mbart50/mask_15_mixed_span_35
-pretrain_setting=fs_mbart50/mask_15_mixed_span_35
+#pretrain_setting=fs_mbart50/mask_15_mixed_span_35
 #pretrain_setting=fs_mbart50/mask_15_word_word
-checkpoint_file=checkpoint_best.pt
+checkpoint_file=epo4_0/checkpoint50.pt
 dataset=webnlg
 
 PRETRAIN=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset/$checkpoint_file
@@ -19,5 +20,6 @@ sentencepiece_model=${BASE}/efs-storage/tokenizer/mbart50/bpe/sentence.bpe.model
 fairseq-generate $DATADIR \
   --path $PRETRAIN \
   --bpe 'sentencepiece' --sentencepiece-model ${sentencepiece_model} \
-  --beam 5 \
-  --num-workers 64
+  --num-workers 64 \
+  --prefix-size 2 \
+  --beam 5

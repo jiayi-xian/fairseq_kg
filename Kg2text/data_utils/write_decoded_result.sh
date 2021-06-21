@@ -4,11 +4,11 @@ log_base=/home/ubuntu/efs-storage/decoded_results
 pretrain_setting=fs_mbart50/mask_15_word_N_span_35
 
 dataset=webnlg
-file_name=ftchp_best_prechp2.log
+file_name=ftchp_50_prechp_1
 
 load_file_dir=$log_base/$pretrain_setting/ft_$dataset/
-nohup_output=ftchp_best_prechp2.log
-decoded_output=ftchp_best_prechp2
+nohup_output=$file_name.log
+decoded_output=$file_name
 tags=[en_XX][TEXT]
 
 

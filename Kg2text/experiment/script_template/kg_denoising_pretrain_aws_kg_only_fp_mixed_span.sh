@@ -12,12 +12,12 @@ TOKENIZER=${EFS}/tokenizer
 # NAME=webnlg/data_mbart50_wtags
 
 
-#pretrain_setting=ft_mbart50/mask_15_mixed_span_35
+pretrain_setting=ft_mbart50_kg/mask_15_mixed_span_35
 #pretrain_setting=fs_mbart50/mask_15_mixed_span_35
-pretrain_setting=fp_mbart50/mask_15_mixed_span_35
+#pretrain_setting=fs_mbart50/mask_15_word_N_span_35
 #pretrain_setting=fs_mbart50/mask_15_word_word
-DATADIR=${BASE}/dataset_denoising/kgtext_wikidata
-PRETRAIN=${EFS}/models/mbart50.pretrained/model_wtags0/model.pt
+DATADIR=${BASE}/dataset_denoising/kgtext_wikikg
+PRETRAIN=${EFS}/models/mbart50.ft.nn/model_wtags0/model.pt
 tensorboard_dir=$BASE/logs/tensorboard/denoising_kgtext_wikidata/$pretrain_setting
 checkpoint_dir=$BASE/checkpoints/denoising_kgtext_wikidata/$pretrain_setting
 restore_file=$checkpoint_dir
@@ -29,22 +29,25 @@ CUDA_VISIBLE_DEVICES=${CUDA} python ${FAIRSEQ}/train.py ${DATADIR} \
     --criterion label_smoothed_cross_entropy --label-smoothing 0.2 --dataset-impl mmap  \
     --optimizer adam --adam-eps 1e-06 --adam-betas "(0.9, 0.98)"  \
     --lr-scheduler polynomial_decay --lr "1e-04" --stop-min-lr "-1"  \
-    --warmup-updates 1800 --total-num-update 300000 \
+    --warmup-updates 1800 --total-num-update 240000 \
     --dropout 0.1 --attention-dropout 0.03 --weight-decay 0.0 \
     --max-tokens 2560 --update-freq 2 --save-interval 1  --fp16 \
-    --save-interval-updates 10000 --keep-interval-updates 20 --seed 222  \
+    --save-interval-updates 20000 --keep-interval-updates 100 --seed 222  \
     --validate-interval-updates 10000 \
     --log-format simple --log-interval 10 --save-dir $checkpoint_dir  \
     --layernorm-embedding --ddp-backend no_c10d --langs en_XX --no-whole-word-mask-langs False  \
     --sample-break-mode eos --whole_word_mask_mode mixed  \
     --mask 0.15 --mask-random 0.0 --insert 0.0  \
     --permute 0.0 --rotate 0.0 --poisson-lambda 3.5  \
-    --permute-sentences 0.0 --mask-length span-poisson --replace-length "-1"  \
+    --permute-sentences 0.0 --mask-length span-poisson --replace-length "1"  \
     --shorten-method none --bpe sentencepiece --sentencepiece-model /home/ubuntu/efs-storage/tokenizer/mbart50/bpe/sentence.bpe.model  \
     --train-subset train --valid-subset valid \
-    --num-workers 8 --required-batch-size-multiple 8 \
+    --num-workers 32 --required-batch-size-multiple 8 \
     --tensorboard-logdir $tensorboard_dir \
-    --finetune-from-model ${PRETRAIN} \
+    --finetune-from-model ${PRETRAIN}
+    
+#--restore-file $restore_file
+#--finetune-from-model ${PRETRAIN} \
 # --restore-file $restore_file \
 # --no-epoch-checkpoints
 #  --reset-optimizer \

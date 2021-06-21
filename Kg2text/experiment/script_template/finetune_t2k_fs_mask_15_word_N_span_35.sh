@@ -14,18 +14,18 @@ TOKENIZER=${EFS}/tokenizer
 #retrain_setting=fs_mbart50/mask_15_mixed_span_35
 pretrain_setting=fs_mbart50/mask_15_word_N_span_35
 #pretrain_setting=fs_mbart50/mask_15_word_word
-checkpoint_file=checkpoints_backup/checkpoint3.pt
+checkpoint_file=checkpoints_backup/checkpoint1.pt
 restore_file=checkpoint30.pt
-epo=4_0
+epo=2_0
 
-dataset=e2enlg
-SRC=kg
-TGT=text
+dataset=webnlg
+SRC=text
+TGT=kg
 
 DATADIR=${EFS}/data-bin/dataset_kg2text/$dataset/en_XX
 PRETRAIN=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/$checkpoint_file
 tensorboard_dir=${EFS}/logs/tensorboard/kg2text_$dataset
-checkpoint_dir=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset/epo$epo
+checkpoint_dir=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_${dataset}_t2k/epo$epo
 restore_file=${BASE}/checkpoints/denoising_kgtext_wikidata/$pretrain_setting/ft_$dataset/epo$epo/$restore_file
 
 source ~/anaconda3/bin/activate pytorch_latest_p37
@@ -42,13 +42,14 @@ CUDA_VISIBLE_DEVICES=${CUDA} python ${FAIRSEQ}/train.py ${DATADIR} \
     --max-tokens 2560 --update-freq 1 \
     --seed 222 \
     --validate-interval 5 \
-    --save-interval 5 \
+    --save-interval 10 \
     --save-dir ${checkpoint_dir} \
     --log-format simple --log-interval 10 --tensorboard-logdir $tensorboard_dir \
     --scoring bleu \
     --dataset-impl mmap --ddp-backend no_c10d \
     --num-workers 32 --required-batch-size-multiple 8 \
-    --restore-file $restore_file
+    --finetune-from-model ${PRETRAIN}
+#    --restore-file $restore_file
 #    --finetune-from-model ${PRETRAIN}
 #   --restore-file $restore_file
 #    --finetune-from-model ${PRETRAIN}
