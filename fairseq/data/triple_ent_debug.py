@@ -276,8 +276,6 @@ class Kg2textEmbedding:
                 1, len(self_vocab), size=(mask_random.sum(),)
             )
             """
-        
-        print("Done")
 
 triples = "[en_XX] [ENT] ▁Romania [TRIPLE] [PRED] ▁description [SUB] ▁Romania [TRIPLE] [PRED] ▁country [SUB] ▁Alba ▁Iulia [TRIPLE] [ENT] ▁Romania [TRIPLE] [PRED] ▁description [SUB] ▁Romania [TRIPLE] [PRED] ▁country [SUB] ▁Alba ▁Iulia [TRIPLE]"
 
@@ -295,7 +293,6 @@ if __name__=="__main__":
     res = emb.add_whole_ent_mask_one_triple(src_tokens, 1, mask_tags=True)
     embeddings = emb.get_embeddings_kgpt(src_tokens)
 
-    print(1)
 
 
 
@@ -331,10 +328,7 @@ def add_whole_ent_mask(source, p):
             1, len(self_vocab), size=(mask_random.sum(),)
         )
         """
-    
-    print("Done")
 
-    
 
 self_ent = 3 
 self_triple = 4

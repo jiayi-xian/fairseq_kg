@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../efs-storage/decoded_results"
+		},
+		{
+			"path": "../../efs-storage/logs"
 		}
 	],
 	"settings": {}
