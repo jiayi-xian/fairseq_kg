@@ -703,11 +703,10 @@ if __name__ == "__main__":
     
     if setting.option != "kg2text":
         for split in ["valid", "test", "train"]:
-            files_list = sorted(glob.glob(os.path.join(load_data_subdir, split)+".json"))
+            files_list = sorted(glob.glob(os.path.join(load_data_subdir, split)+"*"))
             if files_list:             
                 def func(path_k):
                     round_start_time = time.time()
-                    #k = path_k[-2:] if path_k[-2:] == "00" else str(int(path_k[-2:])+18)
                     k = path_k[-2:]
                     setattr(cfg, split+"_file", path_k)
                     save_data_file = os.path.join(save_data_subdir, split+k)
@@ -720,9 +719,8 @@ if __name__ == "__main__":
                     round_end_time = time.time()
                     print("finished the %s-th round, taking %d seconds" % (k, round_end_time-round_start_time))
 
-                #with concurrent.futures.ProcessPoolExecutor() as executor:
-                    #executor.map(func, files_list)
-                func(files_list[0])
+                with concurrent.futures.ProcessPoolExecutor() as executor:
+                    executor.map(func, files_list)
 
 
             elif os.path.exists(os.path.join(load_data_subdir, split)):
