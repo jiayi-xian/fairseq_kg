@@ -1,5 +1,0 @@
-
-
-for $file in $dir:
-
-
