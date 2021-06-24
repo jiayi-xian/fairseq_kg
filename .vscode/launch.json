@@ -158,7 +158,7 @@
         "--simple",
         "",
         "--tokenized",
-        "True",
+        "",
         "--tagged",
         "True",
         "--dataset",
@@ -182,7 +182,7 @@
         "--load_data_dir",
         "/home/ubuntu/efs-storage/data-bin/dataset",
         "--save_data_dir",
-        "/home/ubuntu/efs-storage/data-bin/dataset_kg2text",
+        "/home/ubuntu",
         "--efs",
         "/home/ubuntu/efs-storage"
       ],
@@ -252,7 +252,7 @@
       ]
     },
     {
-      "name": "Python: del_tags",
+      "name": "Python: aws del_tags",
       "type": "python",
       "request": "launch",
       "program": "/home/ubuntu/fairseq/Kg2text/data_utils/del_tags.py",
