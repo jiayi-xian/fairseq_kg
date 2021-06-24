@@ -46,7 +46,7 @@ CUDA_VISIBLE_DEVICES=${CUDA} python ${FAIRSEQ}/train.py ${DATADIR} \
     --train-subset train --valid-subset valid \
     --num-workers 64 --required-batch-size-multiple 8 \
     --tensorboard-logdir $tensorboard_dir \
-    --finetune-from-model ${PRETRAIN}
+ # --finetune-from-model ${PRETRAIN}
 #    --restore-file $restore_file
 #--finetune-from-model ${PRETRAIN} \
 # --restore-file $restore_file \

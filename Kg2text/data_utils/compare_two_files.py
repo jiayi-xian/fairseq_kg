@@ -19,7 +19,7 @@ def write_to_check_file(data, file_path=None):
 def read_file(file_name):
     try:
         file_handle = open(file_name, 'r')
-        text = file_handle.read().splitlines()  # 读取后以行进行分割
+        text = file_handle.read().splitlines()  # splict
         file_handle.close()
         return text
     except IOError as error:
@@ -29,18 +29,18 @@ def read_file(file_name):
 
 def compare_file(file1_name, file2_name):
     if file1_name == "" or file2_name == "":
-        print('文件路径不能为空：file1_name的路径为：{0}, file2_name的路径为：{1} .'.format(file1_name, file2_name))
+        print('no file exists：file1_name path：{0}, file1_name path ：{1} .'.format(file1_name, file2_name))
         sys.exit()
     text1_lines = read_file(file1_name)
     text2_lines = read_file(file2_name)
-    diff = difflib.HtmlDiff()  # 创建htmldiff 对象
-    result = diff.make_file(text1_lines, text2_lines)  # 通过make_file 方法输出 html 格式的对比结果
-    #  将结果保存到result.html文件中并打开
+    diff = difflib.HtmlDiff()  # create htmldiff object
+    result = diff.make_file(text1_lines, text2_lines)  # output html comparison files
+    #  save result to result.html
     try:
-        with open('Kg2text/result.html', 'w') as result_file:      #同 f = open('result.html', 'w') 打开或创建一个result.html文件
-            result_file.write(result)                      #同 f.write(result)
+        with open('Kg2text/result.html', 'w') as result_file:     
+            result_file.write(result)                      
     except IOError as error:
-        print("写入html文件错误：{0}".format(error))
+        print("write error：{0}".format(error))
 
 def args_script2lst(file_name):
 
@@ -70,7 +70,7 @@ def args_script2lst(file_name):
 
 
 if __name__ == "__main__":
-    #compare_file("Kg2text/data-bin/webnlg/sentencepiece_bped_data/eval.label", "Kg2text/data-bin/webnlg/sentencepiece_bped_data/check_eval.txt")                   #传入两文件的路径
+    #compare_file("Kg2text/data-bin/webnlg/sentencepiece_bped_data/eval.label", "Kg2text/data-bin/webnlg/sentencepiece_bped_data/check_eval.txt")
 
     string = args_script2lst("/home/xianjiay/efs-storage/fairseq/Kg2text/experiment/denoising_args")
 
